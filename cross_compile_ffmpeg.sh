@@ -1853,7 +1853,7 @@ EOF
 }
 
 build_libopenh264() {
-  do_git_checkout "https://github.com/cisco/openh264.git" 
+  do_git_checkout "https://github.com/cisco/openh264.git" openh264_git v2.1.1
   cd openh264_git
     sed -i.bak "s/_M_X64/_M_DISABLED_X64/" codec/encoder/core/inc/param_svc.h # for 64 bit, avoid missing _set_FMA3_enable, it needed to link against msvcrt120 to get this or something weird?
     if [[ $bits_target == 32 ]]; then
@@ -1863,9 +1863,9 @@ build_libopenh264() {
     fi
     if [[ $compiler_flavors == "native" ]]; then
       # No need for 'do_make_install', because 'install-static' already has install-instructions. we want install static so no shared built...
-      do_make "$make_prefix_options ASM=yasm install-static"
+      do_make "$make_prefix_options ASM=yasm install-shared"
     else
-      do_make "$make_prefix_options OS=mingw_nt ARCH=$arch ASM=yasm install-static"
+      do_make "$make_prefix_options OS=mingw_nt ARCH=$arch ASM=yasm install-shared"
     fi
   cd ..
 }
